@@ -1,0 +1,31 @@
+<div class="row">
+  <!-- ----UserList------ -->
+  <div class="row mt-3">
+    <div class="col-9 col-sm-3 mt-4">
+      <div class="card border-secondry mb-3">
+        <div class="card-header h3 text-muted text-center">Online Users</div>
+        <div class="card-body">
+          <ul class="list-group" *ngFor="let user of signalr.onlineUsers[0]">
+            <li class="list-group-item p-0"><button class="btn w-100 btn-block"
+              [ngClass]="{'btn-success': user !== myemail, 'btn-dark': user === myemail}"
+              [disabled]="user === myemail"
+              (click)="OpenPrivateChat(user)" >{{user}}</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- -------ChatBox------- -->
+    <div class="col-lg-9">
+      <div class="card border-secondary">
+        <div class="card-header h3 text-muted text-center" id="headtext">Message</div>
+        <div class="card-body">
+            <app-messages [messages]="signalr.message"></app-messages>
+        </div>
+        <div class="card-footer">
+          <app-chat-data (contentEmitter)="sendMessage($event)"></app-chat-data>
+        </div>
+      </div>
+    </div>
+
+
+</div>
