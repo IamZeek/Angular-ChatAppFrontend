@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { AuthService } from './auth.service';
 import { Message } from '../models/message';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PrivateChatComponent } from '../components/private-chat/private-chat.component';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +13,10 @@ export class SignalrService {
   myEmail: string = this.auth.getemailfromtoken();
   onlineUsers: string [] = [];
   message: Message[] = [];
+  privateMessages: Message[] = [];
+  privateMessageInitiated = false;
 
-  constructor(private auth:AuthService) { }
+  constructor(private auth:AuthService, private model:NgbModal) { }
 
   hubConnection!:signalR.HubConnection;
 
@@ -43,6 +47,23 @@ export class SignalrService {
       this.message = [...this.message, newMessage]
     })
 
+    this.hubConnection.on("OpenPrivateChat",(newMessage: Message) =>{
+      this.privateMessages = [...this.privateMessages, newMessage]
+      this.privateMessageInitiated = true;
+      const modelRef = this.model.open(PrivateChatComponent);
+      modelRef.componentInstance.toUser = newMessage.sender;
+    })
+
+    this.hubConnection.on("NewPrivateMessage",(newMessage: Message) =>{
+      this.privateMessages = [...this.privateMessages, newMessage]
+    })
+
+    this.hubConnection.on("ClosePrivateChat",() =>{
+      this.privateMessageInitiated = false,
+      this.privateMessages = [],
+      this.model.dismissAll();
+    })
+
   }
 
 
@@ -60,12 +81,41 @@ export class SignalrService {
     return this.hubConnection.invoke("GetConnectedClients");
   }
 
-  sendMessage(content: string){
+  async sendMessage(content: string){
     const message: Message ={
       sender:this.myEmail,
       content
     }
-    return this.hubConnection?.invoke('ReceiveMessage',message).catch(error => console.log(error));
+
+    return this.hubConnection.invoke('ReceiveMessage', message).catch(error => console.log(error));
+
   }
+
+  async sendPrivateMessage(receiver: string,content: string){
+    const message: Message ={
+      sender: this.myEmail,
+      receiver,
+      content
+    }
+    if(!this.privateMessageInitiated){
+      this.privateMessageInitiated = true;
+      this.auth.addtext(message);
+      return this.hubConnection.invoke('CreatePrivateChat', message).then(()=>{
+        this.privateMessages = [...this.privateMessages, message]
+      })
+      .catch(error => console.log(error))
+      }
+      else{
+        this.auth.addtext(message);
+        return this.hubConnection?.invoke('ReceivePrivateMessage',message).catch(error => console.log(error));
+      }
+
+  }
+
+  async closePrivateChatMessage(otherUser: string){
+    console.log(this.myEmail)
+    this.hubConnection.invoke("RemovePrivateChat", this.myEmail, otherUser);
+  }
+
 
 }

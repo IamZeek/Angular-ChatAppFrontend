@@ -1,4 +1,9 @@
-<app-navbar [name] = "name" [role] = "role"></app-navbar>
+<app-navbar [name] = "name" [role] = "role" ></app-navbar>
 <div class="container">
-  <app-chatpage></app-chatpage>
+  <ng-container *ngIf="page == 'Home'">
+    <app-chatpage></app-chatpage>
+  </ng-container>
+  <ng-container *ngIf="page == 'User'">
+    <app-userdata></app-userdata>
+  </ng-container>
 </div>

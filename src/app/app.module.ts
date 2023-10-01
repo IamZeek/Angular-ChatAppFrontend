@@ -15,6 +15,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ChatDataComponent } from './components/chat-data/chat-data.component';
 import { MessagesComponent } from './components/messages/messages.component';
 import { PrivateChatComponent } from './components/private-chat/private-chat.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { PrivateChatComponent } from './components/private-chat/private-chat.com
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

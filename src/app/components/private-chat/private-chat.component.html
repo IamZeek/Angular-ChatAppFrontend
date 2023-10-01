@@ -1,2 +1,15 @@
-<p>private-chat works!</p>
-
+<div class="model-header">
+  <h4 class="model-title mt-2">{{toUser}}</h4>
+  <button class="btn-close position-absolute top-0 end-0 p-2" (click)="modal.dismiss('Cross click')"></button>
+</div>
+<div class="model-body">
+  <div class="card border-secondary">
+    <div class="card-header h3 text-muted text-center"></div>
+    <div class="card-body">
+        <app-messages [messages]="signalr.privateMessages"></app-messages>
+    </div>
+    <div class="card-footer">
+      <app-chat-data (contentEmitter)="sendMessage($event)"></app-chat-data>
+    </div>
+  </div>
+</div>

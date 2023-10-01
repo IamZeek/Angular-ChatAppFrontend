@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http'
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt'
 import { User } from '../models/User';
+import { Message } from '../models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { User } from '../models/User';
 export class AuthService {
 
   private baseUrl:string = "https://localhost:7061/api/User/";
-  private chatUrl:string = "https://localhost:7061/api/chat/"
+  private chatUrl:string = "https://localhost:7061/api/chat/";
   private userpayload:any;
   constructor(private http : HttpClient, private router: Router ) {
     this.userpayload = this.decodeToken();
@@ -31,6 +32,10 @@ export class AuthService {
 
   registerUser(user: User){
     return this.http.post(`${this.chatUrl}register-user`,user,{responseType: 'text'})
+  }
+
+  addtext(msg: Message){
+    return this.http.post(`${this.chatUrl}add-text`,msg,{responseType: 'text'}).subscribe((res) => console.log(res))
   }
 
   setToken(token: string){

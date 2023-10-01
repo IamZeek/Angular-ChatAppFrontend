@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit{
       email: ['', Validators.required],
       password: ['', Validators.required]
     })
+    localStorage.setItem('page', 'Home')
   }
 
   hideShowPass(){

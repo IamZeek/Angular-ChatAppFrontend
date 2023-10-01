@@ -1,8 +1,7 @@
 <div class="container">
-  <table class="table table-bordered">
+  <table class="table table-bordered display">
     <thead>
       <tr>
-        <th scope="col">id</th>
         <th scope="col">Name</th>
         <th scope="col">Email</th>
         <th scope="col">Sent Messages</th>
@@ -10,10 +9,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
-          <td>{{user.id}}</td>
-          <td>{{user.name}}</td>
-          <td>{{user.email}}</td>
+      <tr *ngFor="let user of data">
+          <td>{{user.Name}}</td>
+          <td>{{user.Email}}</td>
+          <td>{{user.Sent}}</td>
+          <td>{{user.Received}}</td>
       </tr>
 
     </tbody>

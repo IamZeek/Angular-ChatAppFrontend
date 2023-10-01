@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit {
   public user: any = [];
   public name: string = "";
   public role!: string;
+  public page = localStorage.getItem('page');
 
   constructor(private auth: AuthService, private api:ApiService, private Userstore: UserStoreService, private signalr:SignalrService){}
 
@@ -32,6 +33,9 @@ export class DashboardComponent implements OnInit {
 
     this.signalr.startConnection();
 
+
   }
+
+
 
 }

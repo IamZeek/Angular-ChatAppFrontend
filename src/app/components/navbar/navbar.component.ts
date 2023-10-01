@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { ChangepageService } from 'src/app/services/changepage.service';
 import { SignalrService } from 'src/app/services/signalr.service';
 
 @Component({
@@ -16,6 +17,10 @@ export class NavbarComponent {
   LogOut(){
     this.signalr.stopConnection();
     this.auth.LogOut();
-
   }
+
+  toggleChat(check: string) {
+    localStorage.setItem('page', check)
+  }
+
 }

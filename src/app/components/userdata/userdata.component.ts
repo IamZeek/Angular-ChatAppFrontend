@@ -1,5 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-userdata',
@@ -8,14 +9,14 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class UserdataComponent implements AfterViewInit{
 
-  users: Array<{ id:number ,name: string , email:string }> = [];
+  data: any;
 
- constructor(private store: ApiService){}
+ constructor(private store: ApiService,public usagedata: UserDataService){
+ }
 
 
  ngAfterViewInit() {
-  this.store.getUser().subscribe((userdata) =>{
-   this.users = userdata
-  });
-}
+  this.usagedata.getUserdata().subscribe(user => this.data = user );
+  console.log(this.data);
+  };
 }

@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/models/User';
 import { Message } from 'src/app/models/message';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { SignalrService } from 'src/app/services/signalr.service';
 import { UserStoreService } from 'src/app/services/user-store.service';
+import { PrivateChatComponent } from '../private-chat/private-chat.component';
 
 @Component({
   selector: 'app-chatpage',
@@ -22,7 +24,7 @@ export class ChatpageComponent implements AfterViewInit,OnInit{
   onlineUsers!:  Array<{ id:number, name: string, email:string}>;
   messages: Message[] = [];
 
-  constructor(private fb: FormBuilder,public signalr:SignalrService, private api:ApiService, private userStore:UserStoreService, private auth: AuthService){}
+  constructor(private fb: FormBuilder,public signalr:SignalrService, private api:ApiService, private userStore:UserStoreService, private auth: AuthService, public model:NgbModal){}
 
   ngOnInit() {
     this.msgform = this.fb.group({
@@ -42,11 +44,18 @@ export class ChatpageComponent implements AfterViewInit,OnInit{
   }
 
   sendMessage(content: string){
+    const message: Message ={
+      sender: this.myemail,
+      receiver: "All",
+      content
+    }
+    this.auth.addtext(message)
     this.signalr.sendMessage(content);
   }
 
-  OpenPrivateChat(Receiver: string){
-
+  OpenPrivateChat(toUser: string){
+    const modelRef = this.model.open(PrivateChatComponent)
+    modelRef.componentInstance.toUser = toUser;
   }
 
 }
